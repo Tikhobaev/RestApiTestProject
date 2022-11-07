@@ -1,0 +1,1 @@
+java -jar build/libs/shadow-1.0-SNAPSHOT-all.jar server .\config.yml
