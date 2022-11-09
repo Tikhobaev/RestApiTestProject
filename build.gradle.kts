@@ -21,6 +21,8 @@ dependencies {
     implementation("com.h2database:h2:1.3.148")
     implementation("commons-collections:commons-collections:3.2")
     implementation("org.jdbi:jdbi3-core:3.1.0")
+    implementation("org.jdbi:jdbi3-kotlin:3.1.0")
+    implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.1.0")
     testImplementation("junit:junit:4.12")
     testImplementation(kotlin("test"))
 }
