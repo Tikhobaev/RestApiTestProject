@@ -63,49 +63,35 @@ data class User(
     )
 
 data class UserCreation(
-    @JsonProperty("firstName")
     @Min(1)
     @Max(100)
+    @JsonProperty("firstName")
+    @ApiModelProperty(
+        value = FIRST_NAME_HELP,
+        example = FIRST_NAME_EXAMPLE,
+        required = true
+    )
     val firstName: String,
 
+    @Min(1)
+    @Max(100)
     @JsonProperty("lastName")
+    @ApiModelProperty(
+        value = LAST_NAME_HELP,
+        example = LAST_NAME_EXAMPLE,
+        required = true
+    )
     val lastName: String,
 
-    @JsonProperty("email")
     @Email
+    @Min(1)
+    @Max(100)
+    @JsonProperty("email")
+    @ApiModelProperty(
+        value = EMAIL_HELP,
+        example = EMAIL_EXAMPLE,
+        required = true
+    )
     val email: String,
     // Birth date
 )
-
-
-class _User {
-    @XmlElement(name = "id")
-    @get:JsonProperty
-    var id = 0
-        private set
-
-    @XmlElement(name = "firstName")
-    @get:JsonProperty
-    var firstName: String? = null
-        private set
-
-    @XmlElement(name = "lastName")
-    @get:JsonProperty
-    var lastName: String? = null
-        private set
-
-    @XmlElement(name = "email")
-    @get:JsonProperty
-    var email: String? = null
-        private set
-
-
-    constructor() {}
-
-    constructor(id: Int, firstName: String?, lastName: String?, email: String?) {
-        this.id = id
-        this.firstName = firstName
-        this.lastName = lastName
-        this.email = email
-    }
-}
