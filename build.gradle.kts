@@ -7,7 +7,7 @@ plugins {
     application
 }
 
-group = "org.UserRegistryApp"
+group = "org.userRegistryApp"
 version = "1.0-SNAPSHOT"
 
 repositories {
@@ -17,7 +17,6 @@ repositories {
 dependencies {
     implementation("io.dropwizard:dropwizard-core:2.0.0")
     implementation("io.dropwizard:dropwizard-jdbi3:2.0.0")
-    implementation("org.webjars:swagger-ui:4.15.0")
     implementation("com.smoketurner:dropwizard-swagger:2.0.0-1")
     implementation("com.h2database:h2:1.3.148")
     implementation("commons-collections:commons-collections:3.2")
@@ -35,7 +34,7 @@ tasks.withType<KotlinCompile> {
 }
 
 application {
-    mainClass.set("UserRegistryApp")
+    mainClass.set("management.UserRegistryApp")
 }
 
 tasks {
@@ -46,7 +45,7 @@ tasks {
             exclude("META-INF/*.DSA")
             exclude("META-INF/*.RSA")
             exclude("META-INF/*.SF")
-            attributes(mapOf("Main-Class" to "UserRegistryApp"))
+            attributes(mapOf("Main-Class" to "management.UserRegistryApp"))
         }
     }
 

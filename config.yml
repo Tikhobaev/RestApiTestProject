@@ -9,6 +9,9 @@ server:
     - type: http
       port: 9001
 
+swagger:
+  resourcePackage: management
+
 #database:
 #  # the name of your JDBC driver
 #  driverClass: org.h2.Driver
