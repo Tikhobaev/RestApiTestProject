@@ -5,17 +5,21 @@ import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import io.federecio.dropwizard.swagger.SwaggerBundle
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration
+import org.jdbi.v3.core.Jdbi
+import org.jdbi.v3.core.kotlin.KotlinPlugin
+import org.jdbi.v3.sqlobject.SqlObjectPlugin
+import org.jdbi.v3.sqlobject.kotlin.KotlinSqlObjectPlugin
 
 
 class UserRegistryApp : Application<TestProjectConfiguration>() {
     override fun run(config: TestProjectConfiguration, env: Environment) {
-//        val factory = JdbiFactory()
-//        val jdbi: Jdbi = factory.build(env, config.getDataSourceFactory(), "h2")
-//        val userDao: management.UserDAO = jdbi.onDemand(management.UserDAO::class.java)
-//        env.jersey().register(management.UserResource(userDao, jdbi))
 
-        val userResource = UserResource()
-        env.jersey().register(userResource)
+        val jdbi: Jdbi = Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+        jdbi.installPlugin(SqlObjectPlugin())
+            .installPlugin(KotlinPlugin())
+            .installPlugin(KotlinSqlObjectPlugin())
+
+        env.jersey().register(UserResource(jdbi))
         env.healthChecks().register(
             "template",
             UserServiceHealthCheck(config.version)

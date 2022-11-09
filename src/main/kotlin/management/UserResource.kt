@@ -5,6 +5,7 @@ import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import org.eclipse.jetty.http.HttpStatus
+import org.jdbi.v3.core.Jdbi
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 import javax.ws.rs.core.Response
@@ -12,7 +13,11 @@ import javax.ws.rs.core.Response
 @Path("/users")
 @Api(value = "Users", description = "Users swagger", protocols = "http")
 @Produces("application/json")
-class UserResource {
+class UserResource(jdbi: Jdbi) {
+    init {
+        UserService.initUserService(jdbi)
+    }
+
     @GET
     @Timed
     @Path("/{id}")
@@ -43,7 +48,7 @@ class UserResource {
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Retrieve all users.")
-    fun allUsers(): List<Any?> {
+    fun allUsers(): List<User> {
         return UserService.all()
     }
 
@@ -57,7 +62,7 @@ class UserResource {
         notes = "User info should contain valid id and new email should not belong to another user.",
         code = HttpStatus.CONFLICT_409
     )
-    fun updateUser(user: User): String {
+    fun updateUser(user: User): Int {
         return UserService.update(user)
     }
 
@@ -71,9 +76,7 @@ class UserResource {
         notes = "New email should not belong to another user.",
         code = HttpStatus.CONFLICT_409
     )
-    fun createUser(user: UserCreation): String {
+    fun createUser(user: UserCreation): Int {
         return UserService.create(user)
     }
-
-    // put
 }
