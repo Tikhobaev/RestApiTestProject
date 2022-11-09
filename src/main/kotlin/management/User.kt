@@ -5,8 +5,6 @@ import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.Email
 import javax.validation.constraints.Max
 import javax.validation.constraints.Min
-import javax.xml.bind.annotation.XmlElement
-import javax.xml.bind.annotation.XmlRootElement
 
 private const val ID_HELP = "User unique identifier"
 private const val ID_EXAMPLE = "1"
