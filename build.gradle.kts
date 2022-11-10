@@ -23,7 +23,9 @@ dependencies {
     implementation("org.jdbi:jdbi3-core:3.1.0")
     implementation("org.jdbi:jdbi3-kotlin:3.1.0")
     implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.1.0")
-    testImplementation("junit:junit:4.12")
+
+    testImplementation("io.dropwizard:dropwizard-testing:2.0.0")
+    testImplementation("io.mockk:mockk:1.13.2")
     testImplementation(kotlin("test"))
 }
 
