@@ -2,9 +2,9 @@ package management
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import io.swagger.annotations.ApiModelProperty
-import javax.validation.constraints.Email
-import javax.validation.constraints.Max
-import javax.validation.constraints.Min
+import java.time.Instant
+import java.time.LocalDate
+import javax.validation.constraints.*
 
 private const val ID_HELP = "User unique identifier"
 private const val ID_EXAMPLE = "1"
@@ -18,6 +18,12 @@ private const val LAST_NAME_EXAMPLE = "Biden"
 private const val EMAIL_HELP = "User email. Must be unique"
 private const val EMAIL_EXAMPLE = "joe.biden@gmail.com"
 
+private const val CREATION_TIMESTAMP_HELP = "Timestamp of user creation"
+private const val CREATION_TIMESTAMP_EXAMPLE = "1999-11-10 23:30:16.57"
+
+private const val BIRTH_DATE_HELP = "User birth time"
+private const val BIRTH_DATE_EXAMPLE = "2000-05-30"
+
 data class User(
     @JsonProperty("id")
     @ApiModelProperty(
@@ -27,8 +33,6 @@ data class User(
     )
     val id: Int,
 
-    @Min(1)
-    @Max(100)
     @JsonProperty("firstName")
     @ApiModelProperty(
         value = FIRST_NAME_HELP,
@@ -37,8 +41,6 @@ data class User(
     )
     val firstName: String,
 
-    @Min(1)
-    @Max(100)
     @JsonProperty("lastName")
     @ApiModelProperty(
         value = LAST_NAME_HELP,
@@ -47,9 +49,6 @@ data class User(
     )
     val lastName: String,
 
-    @Email
-    @Min(1)
-    @Max(100)
     @JsonProperty("email")
     @ApiModelProperty(
         value = EMAIL_HELP,
@@ -57,12 +56,40 @@ data class User(
         required = true
     )
     val email: String,
-    // Birth date, creation timestamp, deleted timestamps (Instant)
+
+    @JsonProperty("createdTimestamp")
+    @ApiModelProperty(
+        value = CREATION_TIMESTAMP_HELP,
+        example = CREATION_TIMESTAMP_EXAMPLE,
+        dataType = "String",
+        required = true
     )
+    val creationTimestamp: String,
+
+    @JsonProperty("birthDate")
+    @ApiModelProperty(
+        value = BIRTH_DATE_HELP,
+        example = BIRTH_DATE_EXAMPLE,
+        required = true
+    )
+    val birthDate: String,
+
+    @JsonProperty("deletedTimestamp")
+    @ApiModelProperty(
+        value = CREATION_TIMESTAMP_HELP,
+        example = CREATION_TIMESTAMP_EXAMPLE,
+    )
+    val deletedTimestamp: String?,
+
+    @JsonProperty("deleted")
+    @ApiModelProperty(
+        hidden = true
+    )
+    val deleted: Boolean,
+)
 
 data class UserCreation(
-    @Min(1)
-    @Max(100)
+    @get:Size(min = 1, max = 100)
     @JsonProperty("firstName")
     @ApiModelProperty(
         value = FIRST_NAME_HELP,
@@ -71,8 +98,7 @@ data class UserCreation(
     )
     val firstName: String,
 
-    @Min(1)
-    @Max(100)
+    @get:Size(min = 1, max = 100)
     @JsonProperty("lastName")
     @ApiModelProperty(
         value = LAST_NAME_HELP,
@@ -81,9 +107,8 @@ data class UserCreation(
     )
     val lastName: String,
 
-    @Email
-    @Min(1)
-    @Max(100)
+    @get:Email
+    @get:Size(min = 1, max = 100)
     @JsonProperty("email")
     @ApiModelProperty(
         value = EMAIL_HELP,
@@ -91,5 +116,13 @@ data class UserCreation(
         required = true
     )
     val email: String,
-    // Birth date
+
+    @JsonProperty("birthDate")
+    @ApiModelProperty(
+        value = BIRTH_DATE_HELP,
+        example = BIRTH_DATE_EXAMPLE,
+        dataType = "String",
+        required = true
+    )
+    val birthDate: LocalDate,
 )
