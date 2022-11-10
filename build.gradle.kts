@@ -26,6 +26,7 @@ dependencies {
 
     testImplementation("io.dropwizard:dropwizard-testing:2.0.0")
     testImplementation("io.mockk:mockk:1.13.2")
+    testImplementation("org.hibernate.orm:hibernate-core:6.1.5.Final")
     testImplementation(kotlin("test"))
 }
 
