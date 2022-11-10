@@ -14,7 +14,7 @@ import org.jdbi.v3.sqlobject.kotlin.KotlinSqlObjectPlugin
 class UserRegistryApp : Application<TestProjectConfiguration>() {
     override fun run(config: TestProjectConfiguration, env: Environment) {
 
-        val jdbi: Jdbi = Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+        val jdbi: Jdbi = Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1")
         jdbi.installPlugin(SqlObjectPlugin())
             .installPlugin(KotlinPlugin())
             .installPlugin(KotlinSqlObjectPlugin())
