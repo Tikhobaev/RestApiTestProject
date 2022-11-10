@@ -1,30 +1,30 @@
 package management
 
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.KodeinAware
-import com.github.salomonbrys.kodein.bind
+import com.github.salomonbrys.kodein.*
 import io.dropwizard.Application
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
 import io.federecio.dropwizard.swagger.SwaggerBundle
 import io.federecio.dropwizard.swagger.SwaggerBundleConfiguration
 import org.jdbi.v3.core.Jdbi
-// import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.KotlinPlugin
 import org.jdbi.v3.sqlobject.SqlObjectPlugin
 import org.jdbi.v3.sqlobject.kotlin.KotlinSqlObjectPlugin
-import java.time.Instant
 import java.time.LocalDate
 
 
 class UserRegistryApp : Application<TestProjectConfiguration>() {
     override fun run(config: TestProjectConfiguration, env: Environment) {
+        val kodein = Kodein {
+            bind<Jdbi>() with singleton {Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1")}
+        }
 
-        val jdbi: Jdbi = Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1")
+        val jdbi: Jdbi = kodein.instance()
         jdbi.installPlugin(SqlObjectPlugin())
             .installPlugin(KotlinPlugin())
             .installPlugin(KotlinSqlObjectPlugin())
-        val dao = jdbi.onDemand(UserDAO::class.java)
+
+        val dao: UserDAO = jdbi.onDemand(UserDAO::class.java)
         dao.createUserTable()
 
         // TODO remove
