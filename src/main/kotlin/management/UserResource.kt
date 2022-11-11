@@ -26,16 +26,12 @@ class UserResource(private val dao: UserDAO) {
         id: Int
     ): User {
         val foundUser = dao.findById(id)
+            ?: throw WebApplicationException("User with id ($id) not found", Response.Status.NOT_FOUND)
 
-        if (foundUser != null) {
-            return foundUser
-        }
-        val foundDeletedUser = dao.findByIdWithoutDeletedCheck(id)
-        if (foundDeletedUser != null) {
+        if (foundUser.deletedTimestamp != null) {
             throw WebApplicationException("User with id ($id) was deleted", Response.Status.NOT_FOUND)
         }
-
-        throw WebApplicationException("User with id ($id) not found", Response.Status.NOT_FOUND)
+        return foundUser
     }
 
     @DELETE
@@ -45,17 +41,14 @@ class UserResource(private val dao: UserDAO) {
     @ApiOperation(value = "Delete user with specified id.", code = HttpStatus.OK_200, response = User::class)
     fun removeUser(@PathParam("id") id: Int): User {
         val foundUser = dao.findById(id)
-        val foundDeletedUser = dao.findByIdWithoutDeletedCheck(id)
-        if (foundUser == null) {
-            if (foundDeletedUser != null) {
-                throw WebApplicationException("User with id ($id) was deleted", Response.Status.NOT_FOUND)
-            } else {
-                throw WebApplicationException("User with id ($id) not found", Response.Status.NOT_FOUND)
-            }
+            ?: throw WebApplicationException("User with id ($id) not found", Response.Status.NOT_FOUND)
+
+        if (foundUser.deletedTimestamp != null) {
+            throw WebApplicationException("User with id ($id) was deleted", Response.Status.NOT_FOUND)
         }
 
         dao.remove(id)
-        return dao.findByIdWithoutDeletedCheck(id)!!
+        return dao.findById(id)!!
     }
 
     @GET
@@ -83,13 +76,10 @@ class UserResource(private val dao: UserDAO) {
     )
     fun updateUser(@PathParam("id") id: Int, @Valid @NotNull user: UserCreation): User {
         val foundUser = dao.findById(id)
-        val foundDeletedUser = dao.findByIdWithoutDeletedCheck(id)
-        if (foundUser == null) {
-            if (foundDeletedUser != null) {
-                throw WebApplicationException("User with id ($id) was deleted", Response.Status.NOT_FOUND)
-            } else {
-                throw WebApplicationException("User with id ($id) not found", Response.Status.NOT_FOUND)
-            }
+            ?: throw WebApplicationException("User with id ($id) not found", Response.Status.NOT_FOUND)
+
+        if (foundUser.deletedTimestamp != null) {
+            throw WebApplicationException("User with id ($id) was deleted", Response.Status.NOT_FOUND)
         }
 
         val foundByEmailUser = dao.findByEmail(user.email)
@@ -116,9 +106,9 @@ class UserResource(private val dao: UserDAO) {
             throw WebApplicationException("User with email (${user.email}) is already exist", Response.Status.CONFLICT)
         }
 
-        dao.insert(user)
+        val id = dao.insert(user)
 
         // TODO jdbi getGenerated... pass id
-        return dao.findAll().last()
+        return dao.findById(id)!!
     }
 }

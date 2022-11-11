@@ -64,7 +64,7 @@ data class User(
         dataType = "String",
         required = true
     )
-    val creationTimestamp: String,
+    val creationTimestamp: Instant,
 
     @JsonProperty("birthDate")
     @ApiModelProperty(
@@ -80,12 +80,6 @@ data class User(
         example = CREATION_TIMESTAMP_EXAMPLE,
     )
     val deletedTimestamp: String?,
-
-    @JsonProperty("deleted")
-    @ApiModelProperty(
-        hidden = true
-    )
-    val deleted: Boolean,
 )
 
 data class UserCreation(

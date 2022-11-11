@@ -12,6 +12,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
@@ -20,13 +21,13 @@ dependencies {
     implementation("com.smoketurner:dropwizard-swagger:2.0.0-1")
     implementation("com.h2database:h2:1.3.148")
     implementation("commons-collections:commons-collections:3.2")
-    implementation("org.jdbi:jdbi3-core:3.1.0")
-    implementation("org.jdbi:jdbi3-kotlin:3.1.0")
-    implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.1.0")
+    implementation("org.jdbi:jdbi3-core:3.11.1")
+    implementation("org.jdbi:jdbi3-kotlin:3.11.1")
+    implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.11.1")
+    implementation("com.github.salomonbrys.kodein:kodein:4.1.0")
 
     testImplementation("io.dropwizard:dropwizard-testing:2.0.0")
     testImplementation("io.mockk:mockk:1.13.2")
-    testImplementation("org.hibernate.orm:hibernate-core:6.1.5.Final")
     testImplementation(kotlin("test"))
 }
 
