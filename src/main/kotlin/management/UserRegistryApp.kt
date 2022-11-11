@@ -24,6 +24,17 @@ import java.time.LocalDate
 
 class UserRegistryApp : Application<TestProjectConfiguration>() {
     override fun run(config: TestProjectConfiguration, env: Environment) {
+        env.objectMapper.apply {
+            registerModule(
+                SimpleModule("SerializerDeserializerModule").also {
+                    it.addSerializer(Instant::class.java, InstantSerializer())
+                    it.addDeserializer(Instant::class.java, InstantDeserializer())
+                    it.addSerializer(LocalDate::class.java, LocalDateSerializer())
+                    it.addDeserializer(LocalDate::class.java, LocalDateDeserializer())
+                }
+            )
+        }
+
         val kodein = Kodein {
             bind<Jdbi>() with singleton {Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1")}
         }
@@ -50,15 +61,6 @@ class UserRegistryApp : Application<TestProjectConfiguration>() {
     }
 
     override fun initialize(bootstrap: Bootstrap<TestProjectConfiguration?>) {
-        bootstrap.objectMapper = ObjectMapper().apply {
-            registerModule(
-                SimpleModule("SerializerDeserializerModule").also {
-                    it.addSerializer(Instant::class.java, InstantSerializer())
-                    it.addDeserializer(Instant::class.java, InstantDeserializer())
-                }
-            )
-        }
-
         bootstrap.addBundle(object : SwaggerBundle<TestProjectConfiguration>() {
             override fun getSwaggerBundleConfiguration(configuration: TestProjectConfiguration): SwaggerBundleConfiguration? {
                 return configuration.swaggerBundleConfiguration
@@ -77,13 +79,17 @@ class UserRegistryApp : Application<TestProjectConfiguration>() {
         }
     }
 
-//    override fun initialize(bootstrap: Bootstrap<TestProjectConfiguration?>) {
-//        bootstrap.addBundle(object : SwaggerBundle<TestProjectConfiguration>() {
-//            override fun getSwaggerBundleConfiguration(configuration: TestProjectConfiguration): SwaggerBundleConfiguration? {
-//                return configuration.swaggerBundleConfiguration
-//            }
-//        })
-//    }
+    class LocalDateSerializer : StdSerializer<LocalDate>(LocalDate::class.java) {
+        override fun serialize(value: LocalDate, gen: JsonGenerator, provider: SerializerProvider) {
+            gen.writeString(value.toString())
+        }
+    }
+
+    class LocalDateDeserializer : StdDeserializer<LocalDate>(LocalDate::class.java) {
+        override fun deserialize(p: JsonParser, ctxt: DeserializationContext): LocalDate {
+            return LocalDate.parse(p.text)
+        }
+    }
 
     companion object {
         @Throws(Exception::class)

@@ -72,14 +72,14 @@ data class User(
         example = BIRTH_DATE_EXAMPLE,
         required = true
     )
-    val birthDate: String,
+    val birthDate: LocalDate,
 
     @JsonProperty("deletedTimestamp")
     @ApiModelProperty(
         value = CREATION_TIMESTAMP_HELP,
         example = CREATION_TIMESTAMP_EXAMPLE,
     )
-    val deletedTimestamp: String?,
+    val deletedTimestamp: Instant?
 )
 
 data class UserCreation(
@@ -118,5 +118,5 @@ data class UserCreation(
         dataType = "String",
         required = true
     )
-    val birthDate: LocalDate,
+    val birthDate: LocalDate
 )

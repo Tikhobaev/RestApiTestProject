@@ -29,7 +29,7 @@ interface UserDAO {
     @SqlQuery("select * from user where id = :id")
     fun findById(@Bind("id") id: Int): User?
 
-    @SqlQuery("select * from user where email = :email and deletedTimestamp is null")
+    @SqlQuery("select * from user where email = :email")
     fun findByEmail(@Bind("email") email: String): User?
 
     @SqlUpdate("update user set firstName = :firstName, lastName = :lastName, email = :email, birthDate = :birthDate where id = :id")

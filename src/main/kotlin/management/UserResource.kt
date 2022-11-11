@@ -42,7 +42,7 @@ class UserResource(private val dao: UserDAO) {
     fun removeUser(@PathParam("id") id: Int): User {
         val foundUser = dao.findById(id)
             ?: throw WebApplicationException("User with id ($id) not found", Response.Status.NOT_FOUND)
-
+        
         if (foundUser.deletedTimestamp != null) {
             throw WebApplicationException("User with id ($id) was deleted", Response.Status.NOT_FOUND)
         }
