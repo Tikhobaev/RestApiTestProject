@@ -1,9 +1,9 @@
 {
   "id": 1,
-  "firstName": "Joe",
-  "lastName": "Biden",
-  "email": "jb@example.com",
-  "birthDate": "2000-01-01",
+  "firstName": "fn",
+  "lastName": "ln",
+  "email": "fnln@mail.com",
+  "birthDate": "2001-12-30",
   "creationTimestamp": "2022-11-11T12:19:25.100Z",
   "deletedTimestamp": null,
   "deleted": false

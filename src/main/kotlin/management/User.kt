@@ -57,14 +57,14 @@ data class User(
     )
     val email: String,
 
-    @JsonProperty("createdTimestamp")
+    @JsonProperty("creationTimestamp")
     @ApiModelProperty(
         value = CREATION_TIMESTAMP_HELP,
         example = CREATION_TIMESTAMP_EXAMPLE,
         dataType = "String",
         required = true
     )
-    val creationTimestamp: Instant,
+    var creationTimestamp: Instant,
 
     @JsonProperty("birthDate")
     @ApiModelProperty(

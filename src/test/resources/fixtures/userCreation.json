@@ -1,5 +1,7 @@
 {
+  "id": 1,
   "firstName": "Joe",
   "lastName": "Biden",
-  "email": "jb@example.com"
+  "email": "jb@example.com",
+  "birthDate": "2000-01-01"
 }
