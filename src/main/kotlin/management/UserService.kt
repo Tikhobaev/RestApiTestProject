@@ -36,10 +36,6 @@ interface UserDAO {
     @SqlUpdate("update user set firstName = :firstName, lastName = :lastName, email = :email, birthDate = :birthDate where id = :id")
     fun update(@Bind("id") id: Int, @BindBean user: UserCreation)
 
-//    @SqlQuery("select * from user " +
-//            "where deletedTimestamp is null " +
-//            "order by :sortBy :sortOrder " +
-//            "limit :limit offset :offset")
     @SqlQuery(
         """
         select * from user
