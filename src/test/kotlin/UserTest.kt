@@ -6,15 +6,10 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.github.salomonbrys.kodein.Kodein
-import com.github.salomonbrys.kodein.bind
-import com.github.salomonbrys.kodein.instance
-import com.github.salomonbrys.kodein.singleton
 import io.dropwizard.jackson.Jackson.newObjectMapper
 import management.User
 import management.UserCreation
 import org.assertj.core.api.Assertions.assertThat
-import org.jdbi.v3.core.Jdbi
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -51,10 +46,7 @@ internal class UserTest {
         @JvmStatic
         @BeforeAll
         fun beforeClass(): Unit {
-            val kodein = Kodein {
-                bind<ObjectMapper>() with singleton { newObjectMapper() }
-            }
-            mapper = kodein.instance()
+            mapper = newObjectMapper()
             mapper.apply {
                 registerModule(
                     SimpleModule("SerializerDeserializerModule").also {

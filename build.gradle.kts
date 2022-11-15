@@ -24,7 +24,7 @@ dependencies {
     implementation("org.jdbi:jdbi3-core:3.11.1")
     implementation("org.jdbi:jdbi3-kotlin:3.11.1")
     implementation("org.jdbi:jdbi3-kotlin-sqlobject:3.11.1")
-    implementation("com.github.salomonbrys.kodein:kodein:4.1.0")
+    implementation("org.kodein.di:kodein-di-generic-jvm:6.4.0")
 
     testImplementation("io.dropwizard:dropwizard-testing:2.0.0")
     testImplementation("io.mockk:mockk:1.13.2")

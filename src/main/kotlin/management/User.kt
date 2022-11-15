@@ -64,7 +64,7 @@ data class User(
         dataType = "String",
         required = true
     )
-    var creationTimestamp: Instant,
+    val creationTimestamp: Instant,
 
     @JsonProperty("birthDate")
     @ApiModelProperty(
