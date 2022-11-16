@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.SerializerProvider
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.databind.ser.std.StdSerializer
-import com.github.salomonbrys.kodein.*
 import io.dropwizard.Application
 import io.dropwizard.setup.Bootstrap
 import io.dropwizard.setup.Environment
@@ -17,8 +16,13 @@ import org.jdbi.v3.core.Jdbi
 import org.jdbi.v3.core.kotlin.KotlinPlugin
 import org.jdbi.v3.sqlobject.SqlObjectPlugin
 import org.jdbi.v3.sqlobject.kotlin.KotlinSqlObjectPlugin
+import org.kodein.di.Kodein
+import org.kodein.di.direct
 import java.time.Instant
 import java.time.LocalDate
+import org.kodein.di.generic.bind
+import org.kodein.di.generic.instance
+import org.kodein.di.generic.singleton
 
 
 class UserRegistryApp : Application<TestProjectConfiguration>() {
@@ -35,27 +39,15 @@ class UserRegistryApp : Application<TestProjectConfiguration>() {
         }
 
         val kodein = Kodein {
-            bind<Jdbi>() with singleton {Jdbi.create("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1")}
+            bind<TestProjectConfiguration>() with singleton { config }
+            import(managementModule)
         }
+        kodein.direct.instance<UserDAO>().createUserTable()
 
-        val jdbi: Jdbi = kodein.instance()
-        jdbi.installPlugin(SqlObjectPlugin())
-            .installPlugin(KotlinPlugin())
-            .installPlugin(KotlinSqlObjectPlugin())
-
-        val dao: UserDAO = jdbi.onDemand(UserDAO::class.java)
-        dao.createUserTable()
-
-        // TODO remove
-        var id = dao.insert(UserCreation("UserName 1", "UserSurname 1", "email1@email.com", LocalDate.of(2000, 11, 10)))
-        id = dao.insert(UserCreation("UserName 2", "UserSurname 2", "email2@email.com",  LocalDate.of(2000, 11, 11)))
-        id = dao.insert(UserCreation("UserName 3", "UserSurname 3", "email3@email.com",  LocalDate.of(2000, 11, 12)))
-        id = dao.insert(UserCreation("UserName 4", "UserSurname 4", "email4@email.com",  LocalDate.of(2000, 11, 13)))
-
-        env.jersey().register(UserResource(dao))
+        env.jersey().register(kodein.direct.instance<UserResource>())
         env.healthChecks().register(
             "template",
-            UserServiceHealthCheck(config.version)
+            kodein.direct.instance<UserServiceHealthCheck>()
         )
     }
 

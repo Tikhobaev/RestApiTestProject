@@ -1,6 +1,7 @@
 package management
 import org.jdbi.v3.sqlobject.customizer.Bind
 import org.jdbi.v3.sqlobject.customizer.BindBean
+import org.jdbi.v3.sqlobject.customizer.Define
 import org.jdbi.v3.sqlobject.statement.GetGeneratedKeys
 import org.jdbi.v3.sqlobject.statement.SqlQuery
 import org.jdbi.v3.sqlobject.statement.SqlUpdate
@@ -35,6 +36,32 @@ interface UserDAO {
     @SqlUpdate("update user set firstName = :firstName, lastName = :lastName, email = :email, birthDate = :birthDate where id = :id")
     fun update(@Bind("id") id: Int, @BindBean user: UserCreation)
 
-    @SqlQuery("select * from user where deletedTimestamp is null")
-    fun findAll(): List<User>
+    @SqlQuery(
+        """
+        select * from user
+        where deletedTimestamp is null
+        order by <sortBy> <sortOrder>
+        limit :limit offset :offset
+        """
+    )
+    fun findAll(
+        @Define("sortBy") sortBy: UserResource.SortBy,
+        @Define("sortOrder") sortOrder: UserResource.SortOrder,
+        limit: Int,
+        offset: Int,
+    ): List<User>
+
+    @SqlQuery(
+        """
+        select * from user
+        order by <sortBy> <sortOrder>
+        limit :limit offset :offset
+        """
+    )
+    fun findAllEvenDeleted(
+        @Define("sortBy") sortBy: UserResource.SortBy,
+        @Define("sortOrder") sortOrder: UserResource.SortOrder,
+        limit: Int,
+        offset: Int,
+    ): List<User>
 }

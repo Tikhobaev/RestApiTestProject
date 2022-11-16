@@ -23,7 +23,7 @@ database:
   password: hmP12
 
   # the JDBC URL
-  url: jdbc:h2:~/test
+  url: jdbc:h2:mem:test;DB_CLOSE_DELAY=-1
 
   # any properties specific to your JDBC driver:
   properties:

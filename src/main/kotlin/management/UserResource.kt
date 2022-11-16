@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiOperation
 import io.swagger.annotations.ApiParam
 import org.eclipse.jetty.http.HttpStatus
 import javax.validation.Valid
+import javax.validation.constraints.Max
+import javax.validation.constraints.Min
 import javax.validation.constraints.NotNull
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
@@ -51,6 +53,18 @@ class UserResource(private val dao: UserDAO) {
         return dao.findById(id)!!
     }
 
+    enum class SortBy {
+        id,
+        firstName,
+        lastName,
+        email
+    }
+
+    enum class SortOrder {
+        ASC,
+        DESC
+    }
+
     @GET
     @Timed
     @Produces(MediaType.APPLICATION_JSON)
@@ -60,8 +74,18 @@ class UserResource(private val dao: UserDAO) {
         response = User::class,
         responseContainer = "List"
     )
-    fun allUsers(): List<User> {
-        return dao.findAll()
+    fun allUsers(
+        @QueryParam("limit") @Min(1) @Max(100) @DefaultValue("25") limit: Int,
+        @QueryParam("offset") @Min(0) @DefaultValue("0") offset: Int,
+        @QueryParam("sortBy") @DefaultValue("id") sortBy: SortBy,
+        @QueryParam("sortOrder") @DefaultValue("ASC") sortOrder: SortOrder,
+        @QueryParam("showDeleted") @DefaultValue("false") showDeleted: Boolean,
+    ): List<User> {
+        return if (showDeleted) {
+            dao.findAllEvenDeleted(sortBy, sortOrder, limit, offset)
+        } else {
+            dao.findAll(sortBy, sortOrder, limit, offset)
+        }
     }
 
     @PUT
